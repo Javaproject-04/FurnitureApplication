@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products - FurnishFusion Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 36px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(197, 157, 95, 0.4);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #C59D5F;
+            margin-bottom: 15px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #3c3;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/admin/dashboard" class="nav-brand">🛋️ FurnishFusion Admin</a>
+            <div class="nav-links">
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/orders">Orders</a>
+                <a href="/admin/contact">Contact</a>
+                <a href="/products">View Site</a>
+                <a href="/admin/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'error' %}error-message{% else %}success-message{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="page-header">
+            <h1>Manage Products</h1>
+            <a href="/admin/products/add" class="btn-primary">+ Add New Product</a>
+        </div>
+
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                    {% else %}
+                        🪑
+                    {% endif %}
+                </div>
+                <div class="product-name">{{ product.name }}</div>
+                <div class="product-description">{{ product.description or 'No description' }}</div>
+                <div class="product-price">₹{{ "%.2f"|format(product.price) }}</div>
+                <div class="product-actions">
+                    <form method="POST" action="/admin/products/delete/{{ product.id }}" style="flex: 1;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                        <button type="submit" class="btn-danger" style="width: 100%;">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 60px; background: white; border-radius: 15px;">
+            <p style="font-size: 18px; color: #666; margin-bottom: 20px;">No products yet.</p>
+            <a href="/admin/products/add" class="btn-primary">Add Your First Product</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

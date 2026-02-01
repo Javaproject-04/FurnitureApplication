@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FurnishFusion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .login-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .login-type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .login-type-btn {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f9fa;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-type-btn.active {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            border-color: #C59D5F;
+        }
+
+        .login-type-btn:hover {
+            border-color: #C59D5F;
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #C59D5F;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(197, 157, 95, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(197, 157, 95, 0.4);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .register-link a {
+            color: #C59D5F;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #C59D5F;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #3c3;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .login-type-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-center">
+    <div class="container">
+        <div class="header">
+            <h1>Welcome Back</h1>
+            <p>Login to FurnishFusion</p>
+        </div>
+        
+        <div class="form-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'error' %}error-message{% else %}success-message{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="login-type-selector">
+                <div class="login-type-btn active" onclick="showLoginForm('user')">👤 User Login</div>
+                <div class="login-type-btn" onclick="showLoginForm('admin')">🔐 Admin Login</div>
+            </div>
+
+            <!-- User Login Form -->
+            <form method="POST" action="/login" class="login-form active" id="user-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Login</button>
+
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <div class="register-link">
+                    <p>Don't have an account? <a href="/register">Register here</a></p>
+                </div>
+            </form>
+
+            <!-- Admin Login Form -->
+            <form method="POST" action="/admin/login" class="login-form" id="admin-form">
+                <div class="form-group">
+                    <label for="admin-username">Username</label>
+                    <input type="text" id="admin-username" name="username" placeholder="Enter admin username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" name="password" placeholder="Enter admin password" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Admin Login</button>
+            </form>
+        </div>
+    </div>
+    </div>
+    {% include 'partials/_footer.html' %}
+
+    <script>
+        function showLoginForm(type) {
+            // Update button states
+            document.querySelectorAll('.login-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show/hide forms
+            document.getElementById('user-form').classList.remove('active');
+            document.getElementById('admin-form').classList.remove('active');
+            
+            if (type === 'user') {
+                document.getElementById('user-form').classList.add('active');
+            } else {
+                document.getElementById('admin-form').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

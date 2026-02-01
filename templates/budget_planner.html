@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Planner - FurnishFusion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .chat-container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .chat-header h1 { font-size: 22px; margin-bottom: 6px; }
+        .chat-header p { font-size: 14px; opacity: 0.9; }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .msg {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+        .msg-user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+        }
+        .msg-bot {
+            align-self: flex-start;
+            background: #f0f0f0;
+            color: #333;
+        }
+        .msg-bot .budget-summary {
+            margin: 12px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #C59D5F;
+        }
+        .msg-bot .category-block {
+            margin: 16px 0;
+            padding: 14px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e8e8e8;
+        }
+        .msg-bot .category-block h4 {
+            color: #B8860B;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .msg-bot .product-card {
+            display: flex;
+            gap: 14px;
+            padding: 12px;
+            background: #fafafa;
+            border-radius: 10px;
+            margin: 10px 0;
+            align-items: flex-start;
+        }
+        .msg-bot .product-img-wrap {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #e8e8e8;
+        }
+        .msg-bot .product-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .msg-bot .product-info { flex: 1; }
+        .msg-bot .product-name { font-weight: 600; color: #333; margin-bottom: 4px; }
+        .msg-bot .product-price { color: #C59D5F; font-weight: 700; }
+        .msg-bot .product-desc { font-size: 12px; color: #666; margin-top: 4px; }
+        .msg-bot .fallback-msg { color: #888; font-style: italic; padding: 8px 0; }
+        .msg-error { background: #fee; color: #c33; }
+        .chat-input-wrap {
+            padding: 16px;
+            border-top: 1px solid #e8e8e8;
+            background: #fafafa;
+        }
+        .chat-input-form {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: #C59D5F;
+        }
+        .btn-send {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-send:hover { opacity: 0.9; }
+        .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+        .typing { color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="{% if session.get('user_id') %}/dashboard{% else %}/products{% endif %}" class="nav-brand">🛋️ FurnishFusion</a>
+            <div class="nav-links">
+                <a href="/about">About</a>
+                <a href="/products">Products</a>
+                <a href="/cart">Cart</a>
+                {% if session.get('user_id') %}
+                <a href="/dashboard">Dashboard</a>
+                <a href="/orders">Orders</a>
+                <a href="/logout">Logout</a>
+                {% else %}
+                <a href="/login">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>💰 Budget Planner</h1>
+            <p>Tell me your budget and room type — e.g. "I have 50000 to furnish my bedroom"</p>
+        </div>
+        <div class="chat-messages" id="messages">
+            <div class="msg msg-bot">
+                Hi! I'm your Budget Planner. Share your total budget and the room you want to furnish (bedroom, living room, or office). Example: <em>"I have 50000 to furnish my bedroom"</em>
+            </div>
+        </div>
+        <div class="chat-input-wrap">
+            <form class="chat-input-form" id="chatForm">
+                <input type="text" class="chat-input" id="userInput" placeholder="e.g. I have 50000 to furnish my bedroom" autocomplete="off">
+                <button type="submit" class="btn-send" id="sendBtn">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const messagesEl = document.getElementById('messages');
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        function appendMsg(content, isUser) {
+            const div = document.createElement('div');
+            div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-bot');
+            div.innerHTML = content;
+            messagesEl.appendChild(div);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function renderBotResponse(data) {
+            if (!data.success) {
+                appendMsg('<span class="msg-error">' + (data.error || 'Something went wrong.') + '</span>', false);
+                return;
+            }
+            let html = '<div class="budget-summary"><strong>Total budget:</strong> ₹' + data.total_budget.toLocaleString('en-IN') + '<br>';
+            html += '<strong>Room:</strong> ' + data.room_label + '</div>';
+            if (data.categories && data.categories.length) {
+                data.categories.forEach(function(cat) {
+                    html += '<div class="category-block">';
+                    html += '<h4>' + cat.category + ' (' + cat.percentage + '% — ₹' + cat.allocated_budget.toLocaleString('en-IN') + ')</h4>';
+                    if (cat.products && cat.products.length) {
+                        cat.products.forEach(function(p) {
+                            const imgSrc = p.image_url ? (p.image_url.startsWith('http') ? p.image_url : (p.image_url.startsWith('/') ? p.image_url : '/' + p.image_url)) : '';
+                            const productUrl = '/products';
+                            html += '<a href="' + productUrl + '" class="product-card" style="text-decoration:none;color:inherit;display:flex;" title="View product">';
+                            if (imgSrc) {
+                                html += '<div class="product-img-wrap"><img src="' + imgSrc + '" alt="' + (p.name || '') + '"></div>';
+                            } else {
+                                html += '<div class="product-img-wrap" style="display:flex;align-items:center;justify-content:center;color:#999;font-size:12px;">No image</div>';
+                            }
+                            html += '<div class="product-info">';
+                            html += '<div class="product-name">' + (p.name || '') + '</div>';
+                            html += '<div class="product-price">₹' + (p.price || 0).toLocaleString('en-IN') + '</div>';
+                            if (p.description) html += '<div class="product-desc">' + p.description + '</div>';
+                            html += '</div></a>';
+                        });
+                    }
+                    if (cat.fallback_message) {
+                        html += '<div class="fallback-msg">' + cat.fallback_message + '</div>';
+                    }
+                    html += '</div>';
+                });
+            }
+            appendMsg(html, false);
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const msg = (input.value || '').trim();
+            if (!msg) return;
+            appendMsg(msg, true);
+            input.value = '';
+            sendBtn.disabled = true;
+            appendMsg('<span class="typing">Thinking...</span>', false);
+            fetch('/budget-planner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                // Remove "Thinking..." msg
+                const last = messagesEl.lastElementChild;
+                if (last && last.querySelector('.typing')) last.remove();
+                renderBotResponse(data);
+            })
+            .catch(function(err) {
+                const last = messagesEl.lastElementChild;
+                if (last && last.querySelector('.typing')) last.remove();
+                appendMsg('<span class="msg-error">Failed to get response. Please try again.</span>', false);
+            })
+            .finally(function() { sendBtn.disabled = false; });
+        });
+    </script>
+    {% include 'partials/_footer.html' %}
+</body>
+</html>

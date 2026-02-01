@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - FurnishFusion Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #C59D5F;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(197, 157, 95, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(197, 157, 95, 0.4);
+        }
+
+        .btn-cancel {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/admin/dashboard" class="nav-brand">🛋️ FurnishFusion Admin</a>
+            <div class="nav-links">
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/orders">Orders</a>
+                <a href="/admin/contact">Contact</a>
+                <a href="/products">View Site</a>
+                <a href="/admin/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="error-message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Add New Product</h1>
+                <p>Fill in the details to add a new product to the store</p>
+            </div>
+
+            <form method="POST" action="/admin/products/add" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Product Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter product name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter product description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (₹) *</label>
+                    <input type="number" id="price" name="price" placeholder="Enter price" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category (Auto-detected if left empty)</label>
+                    <input type="text" id="category" name="category" placeholder="e.g., Beds - Single Bed, Sofas, Dining, etc.">
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                        Category will be automatically detected from product name if left empty. Examples: "single bed", "double bed", "sofa cum bed", "dining table", etc.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Rating (0-5)</label>
+                    <input type="number" id="rating" name="rating" placeholder="Enter rating" step="0.1" min="0" max="5" value="0">
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                        Product rating from 0 to 5 stars
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="image_file">Upload Image *</label>
+                    <input type="file" id="image_file" name="image_file" accept="image/*" required>
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                        Allowed formats: PNG, JPG, JPEG, GIF, WEBP (Max 16MB)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="image_url">Or Image URL (Optional - if not uploading file)</label>
+                    <input type="url" id="image_url" name="image_url" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <button type="submit" class="btn-submit">Add Product</button>
+                <a href="/admin/products" class="btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

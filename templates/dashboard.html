@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FurnishFusion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .nav-brand:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #C59D5F;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(197, 157, 95, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .orders-list {
+            list-style: none;
+        }
+
+        .order-item {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .order-item:hover {
+            border-color: #C59D5F;
+            box-shadow: 0 5px 15px rgba(197, 157, 95, 0.1);
+        }
+
+        .order-info {
+            flex: 1;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .order-date {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .order-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-processing {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .order-total {
+            font-size: 20px;
+            font-weight: 700;
+            color: #C59D5F;
+            margin-left: 20px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .quick-link {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            text-decoration: none;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .quick-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(197, 157, 95, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #3c3;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .contact-icon {
+            font-size: 32px;
+            min-width: 40px;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .contact-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .contact-value a {
+            color: #C59D5F;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-value a:hover {
+            color: #B8860B;
+            text-decoration: underline;
+        }
+
+        .chatbot-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+        .chatbot-icon-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        }
+        .chatbot-icon-btn .chatbot-svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .chatbot-icon-btn .chatbot-label { white-space: nowrap; }
+        .chatbot-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            max-height: 480px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .chatbot-panel.open { display: flex; }
+        .chatbot-panel-header {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+        .chatbot-close { background: none; border: none; color: white; font-size: 24px; cursor: pointer; line-height: 1; }
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            max-height: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chatbot-msg { max-width: 90%; padding: 10px 14px; border-radius: 10px; font-size: 14px; line-height: 1.5; }
+        .chatbot-user { align-self: flex-end; background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%); color: white; }
+        .chatbot-bot { align-self: flex-start; background: #f0f0f0; color: #333; }
+        .chatbot-bot .bp-cat { margin: 10px 0; padding: 10px; background: white; border-radius: 8px; font-size: 13px; }
+        .chatbot-bot .bp-product { display: flex; gap: 10px; padding: 8px; background: #fafafa; border-radius: 8px; margin: 6px 0; }
+        .chatbot-bot .bp-product img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        .chatbot-input-wrap { padding: 12px; border-top: 1px solid #eee; display: flex; gap: 8px; }
+        .chatbot-input { flex: 1; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+        .chatbot-send { padding: 10px 18px; background: #C59D5F; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .header {
+                text-align: center;
+            }
+
+            .user-info {
+                text-align: center;
+                width: 100%;
+                margin-top: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .order-total {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+            .chatbot-panel { width: calc(100% - 40px); right: 20px; left: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/dashboard" class="nav-brand" style="text-decoration: none; color: white;">🛋️ FurnishFusion</a>
+            <div class="nav-links">
+                <a href="/about">About</a>
+                <a href="/products">Products</a>
+                <a href="/cart">Cart 
+                    {% if session.get('cart') %}
+                    <span style="background: rgba(255, 255, 255, 0.3); padding: 5px 10px; border-radius: 20px; font-size: 14px;">{{ session.cart|length }}</span>
+                    {% endif %}
+                </a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/orders">Orders</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'error' %}error-message{% else %}success-message{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="header">
+            <div>
+                <h1>Welcome to FurnishFusion</h1>
+                <p>Your personalized dashboard</p>
+            </div>
+            <div class="user-info" style="display: flex; align-items: center; gap: 20px;">
+                <button type="button" class="chatbot-icon-btn" id="chatbotToggle" title="Budget Planner Chatbot">
+                    <svg class="chatbot-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
+                    <span class="chatbot-label">Budget Planner</span>
+                </button>
+                <div>
+                    <div class="user-name">{{ user.name }}</div>
+                    <div class="user-email">{{ user.email }}</div>
+                    <a href="/logout">
+                        <button class="btn-logout">Logout</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Planner Chatbot Panel -->
+        <div class="chatbot-panel" id="chatbotPanel">
+            <div class="chatbot-panel-header">
+                <span>💰 Budget Planner</span>
+                <button type="button" class="chatbot-close" id="chatbotClose">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chatbot-msg chatbot-bot">Hi! Share your budget and room type. Example: "I have 50000 to furnish my bedroom"</div>
+            </div>
+            <div class="chatbot-input-wrap">
+                <input type="text" class="chatbot-input" id="chatbotInput" placeholder="e.g. I have 50000 for my bedroom">
+                <button type="button" class="chatbot-send" id="chatbotSend">Send</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-label">Total Orders</div>
+                <div class="stat-value">{{ order_count }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Total Spent</div>
+                <div class="stat-value">₹{{ "%.2f"|format(total_spent) }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👤</div>
+                <div class="stat-label">Member Since</div>
+                <div class="stat-value">{{ user.created_at[:10] if user.created_at else 'N/A' }}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Quick Links</h2>
+            <div class="quick-links">
+                <a href="/products" class="quick-link">🛍️ Browse Products</a>
+                <a href="/cart" class="quick-link">🛒 View Cart</a>
+                <a href="/orders" class="quick-link">📋 All Orders</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Recent Orders</h2>
+            {% if recent_orders %}
+                <ul class="orders-list">
+                    {% for order in recent_orders %}
+                    <li class="order-item">
+                        <div class="order-info">
+                            <div class="order-id">Order #{{ order.id }}</div>
+                            <div class="order-date">{{ order.created_at if order.created_at else 'N/A' }}</div>
+                        </div>
+                        <div>
+                            <span class="order-status status-{{ order.status }}">{{ order.status }}</span>
+                        </div>
+                        <div class="order-total">₹{{ "%.2f"|format(order.total) }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <p>No orders yet. Start shopping to see your orders here!</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if contact_info %}
+        <div class="section">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">🏢</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Company</div>
+                        <div class="contact-value">{{ contact_info.company_name }}</div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Address</div>
+                        <div class="contact-value">
+                            {{ contact_info.address }}<br>
+                            {% if contact_info.city %}{{ contact_info.city }}, {% endif %}
+                            {% if contact_info.state %}{{ contact_info.state }}{% endif %}
+                            {% if contact_info.zip_code %} {{ contact_info.zip_code }}{% endif %}<br>
+                            {% if contact_info.country %}{{ contact_info.country }}{% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Email</div>
+                        <div class="contact-value">
+                            <a href="mailto:{{ contact_info.email }}" style="color: #C59D5F; text-decoration: none;">
+                                {{ contact_info.email }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Phone</div>
+                        <div class="contact-value">
+                            <a href="tel:{{ contact_info.phone }}" style="color: #C59D5F; text-decoration: none;">
+                                {{ contact_info.phone }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if contact_info.website %}
+                <div class="contact-item">
+                    <div class="contact-icon">🌐</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Website</div>
+                        <div class="contact-value">
+                            <a href="{{ contact_info.website }}" target="_blank" style="color: #C59D5F; text-decoration: none;">
+                                {{ contact_info.website }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% include 'partials/_footer.html' %}
+
+    <script>
+        (function() {
+            var panel = document.getElementById('chatbotPanel');
+            var toggle = document.getElementById('chatbotToggle');
+            var close = document.getElementById('chatbotClose');
+            var input = document.getElementById('chatbotInput');
+            var send = document.getElementById('chatbotSend');
+            var messages = document.getElementById('chatbotMessages');
+            if (!panel || !toggle) return;
+            toggle.addEventListener('click', function() { panel.classList.add('open'); });
+            if (close) close.addEventListener('click', function() { panel.classList.remove('open'); });
+            function addMsg(text, isUser) {
+                var d = document.createElement('div');
+                d.className = 'chatbot-msg ' + (isUser ? 'chatbot-user' : 'chatbot-bot');
+                d.innerHTML = text;
+                messages.appendChild(d);
+                messages.scrollTop = messages.scrollHeight;
+            }
+            function renderBot(data) {
+                if (!data.success) { addMsg('<span style="color:#c33">' + (data.error || 'Error') + '</span>', false); return; }
+                var h = '<strong>Budget:</strong> ₹' + data.total_budget.toLocaleString('en-IN') + ' | <strong>Room:</strong> ' + data.room_label + '<br>';
+                if (data.categories) data.categories.forEach(function(c) {
+                    h += '<div class="bp-cat"><strong>' + c.category + '</strong> (' + c.percentage + '% - ₹' + c.allocated_budget.toLocaleString('en-IN') + ')</div>';
+                    if (c.products && c.products.length) c.products.forEach(function(p) {
+                        var img = p.image_url ? (p.image_url.startsWith('http') ? p.image_url : (p.image_url.startsWith('/') ? p.image_url : '/' + p.image_url)) : '';
+                        h += '<div class="bp-product">' + (img ? '<img src="' + img + '" alt="">' : '') + '<div><strong>' + p.name + '</strong><br>₹' + (p.price||0).toLocaleString('en-IN') + '</div></div>';
+                    });
+                    if (c.fallback_message) h += '<div style="color:#888;font-size:12px">' + c.fallback_message + '</div>';
+                });
+                addMsg(h, false);
+            }
+            function sendMsg() {
+                var txt = (input.value || '').trim();
+                if (!txt) return;
+                addMsg(txt, true);
+                input.value = '';
+                fetch('/budget-planner', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: txt }) })
+                    .then(function(r) { return r.json(); })
+                    .then(renderBot)
+                    .catch(function() { addMsg('<span style="color:#c33">Failed. Try again.</span>', false); });
+            }
+            if (send) send.addEventListener('click', sendMsg);
+            if (input) input.addEventListener('keypress', function(e) { if (e.key === 'Enter') sendMsg(); });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - FurnishFusion Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .order-info {
+            flex: 1;
+        }
+
+        .order-id {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .order-customer {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .order-date {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .order-status-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .order-status {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-accepted {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-processing {
+            background: #ffeaa7;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-shipped {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .order-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: #C59D5F;
+        }
+
+        .status-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-status {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-accept {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-accept:hover {
+            background: #218838;
+        }
+
+        .btn-cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #c82333;
+        }
+
+        .btn-complete {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-complete:hover {
+            background: #138496;
+        }
+
+        .order-items {
+            margin-top: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .item-quantity {
+            color: #999;
+            font-size: 14px;
+            margin: 0 20px;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #3c3;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 15px;
+        }
+
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/admin/dashboard" class="nav-brand">🛋️ FurnishFusion Admin</a>
+            <div class="nav-links">
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/orders">Orders</a>
+                <a href="/admin/contact">Contact</a>
+                <a href="/products">View Site</a>
+                <a href="/admin/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'error' %}error-message{% else %}success-message{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="page-header">
+            <h1>Manage Orders</h1>
+            <p>View and manage all customer orders</p>
+        </div>
+
+        {% if orders_with_items %}
+            {% for order_data in orders_with_items %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">Order #{{ order_data.order.id }}</div>
+                        <div class="order-customer">
+                            Customer: {{ order_data.order.user_name }} ({{ order_data.order.user_email }})
+                        </div>
+                        <div class="order-date">
+                            Placed on: {{ order_data.order.created_at if order_data.order.created_at else 'N/A' }}
+                        </div>
+                    </div>
+                    <div class="order-status-section">
+                        <span class="order-status status-{{ order_data.order.status.lower() }}">
+                            {{ order_data.order.status }}
+                        </span>
+                        <div class="order-total">₹{{ "%.2f"|format(order_data.order.total) }}</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; padding: 12px; background:#f8f9fa; border-radius: 10px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                    <div style="color:#333; font-weight:600;">
+                        Payment:
+                        {% if order_data.order.payment_method == 'cod' %}💵 COD{% elif order_data.order.payment_method == 'upi' %}📱 UPI{% else %}{{ order_data.order.payment_method|upper }}{% endif %}
+                        | Status: {{ (order_data.order.payment_status or 'pending')|upper }}
+                        {% if order_data.order.advance_amount %}
+                            | Advance: ₹{{ "%.2f"|format(order_data.order.advance_amount) }}
+                        {% endif %}
+                    </div>
+                    {% if order_data.order.payment_proof_url %}
+                        <a href="{{ order_data.order.payment_proof_url }}" target="_blank" style="color:#B8860B; font-weight:700; text-decoration:none;">
+                            View payment screenshot
+                        </a>
+                    {% endif %}
+                </div>
+                
+                {% if order_data.order.contact_mobile or order_data.order.contact_address %}
+                <div style="margin-top: 10px; padding: 12px; background:#e8f4f8; border-radius: 10px; border-left: 4px solid #17a2b8;">
+                    <div style="font-weight:700; color:#333; margin-bottom:8px;">📞 Contact Details:</div>
+                    {% if order_data.order.contact_mobile %}
+                        <div style="margin-bottom:5px; color:#333;">
+                            <strong>Mobile:</strong> {{ order_data.order.contact_mobile }}
+                        </div>
+                    {% endif %}
+                    {% if order_data.order.contact_address %}
+                        <div style="color:#333;">
+                            <strong>Address:</strong> {{ order_data.order.contact_address }}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="status-actions">
+                    {% if order_data.order.status.lower() == 'pending' %}
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="accepted">
+                        <button type="submit" class="btn-status btn-accept">✓ Accept Order</button>
+                    </form>
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" class="btn-status btn-cancel" onclick="return confirm('Are you sure you want to cancel this order?');">✗ Cancel Order</button>
+                    </form>
+                    {% elif order_data.order.status.lower() == 'accepted' %}
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="processing">
+                        <button type="submit" class="btn-status btn-complete">🔄 Mark as Processing</button>
+                    </form>
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" class="btn-status btn-cancel" onclick="return confirm('Are you sure you want to cancel this order?');">✗ Cancel Order</button>
+                    </form>
+                    {% elif order_data.order.status.lower() == 'processing' %}
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="shipped">
+                        <button type="submit" class="btn-status btn-complete">🚚 Mark as Shipped</button>
+                    </form>
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" class="btn-status btn-cancel" onclick="return confirm('Are you sure you want to cancel this order?');">✗ Cancel Order</button>
+                    </form>
+                    {% elif order_data.order.status.lower() == 'shipped' %}
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="delivered">
+                        <button type="submit" class="btn-status btn-complete">🎉 Mark as Delivered</button>
+                    </form>
+                    {% elif order_data.order.status.lower() == 'delivered' %}
+                    <form method="POST" action="/admin/orders/update-status/{{ order_data.order.id }}" style="display: inline;">
+                        <input type="hidden" name="status" value="completed">
+                        <button type="submit" class="btn-status btn-complete">✅ Mark as Completed</button>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <div class="order-items">
+                    <h3 style="margin-bottom: 15px; color: #333;">Order Items:</h3>
+                    {% for item in order_data.order_items %}
+                    <div class="order-item">
+                        <div class="item-info">
+                            <div class="item-name">{{ item.name }}</div>
+                            <div class="item-details">{{ item.description or 'Premium quality furniture' }}</div>
+                        </div>
+                        <div class="item-quantity">Qty: {{ item.quantity }}</div>
+                        <div class="item-price">₹{{ "%.2f"|format(item.price * item.quantity) }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h2>No Orders Yet</h2>
+            <p>Orders will appear here when customers place them.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

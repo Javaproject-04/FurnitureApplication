@@ -1,0 +1,25 @@
+{% extends "content_page.html" %}
+{% block title %}Contact Us{% endblock %}
+{% block content %}
+<h1>Contact Us</h1>
+<p>We'd love to hear from you. Reach out through any of the channels below.</p>
+
+{% if contact_info %}
+<h2>Get in Touch</h2>
+<ul>
+    <li><strong>Company:</strong> {{ contact_info.company_name }}</li>
+    <li><strong>Email:</strong> <a href="mailto:{{ contact_info.email }}">{{ contact_info.email }}</a></li>
+    <li><strong>Phone:</strong> <a href="tel:{{ contact_info.phone }}">{{ contact_info.phone }}</a></li>
+    <li><strong>Address:</strong> {{ contact_info.address }}{% if contact_info.city %}, {{ contact_info.city }}{% endif %}{% if contact_info.state %} {{ contact_info.state }}{% endif %}{% if contact_info.zip_code %} {{ contact_info.zip_code }}{% endif %}{% if contact_info.country %}, {{ contact_info.country }}{% endif %}</li>
+    {% if contact_info.website %}<li><strong>Website:</strong> <a href="{{ contact_info.website }}" target="_blank">{{ contact_info.website }}</a></li>{% endif %}
+</ul>
+{% else %}
+<p>For inquiries, please email us at <a href="mailto:info@furnishfusion.com">info@furnishfusion.com</a> or call +91 1234567890.</p>
+{% endif %}
+
+<h2>Social Media</h2>
+<p>Follow us on <a href="https://www.instagram.com/furnishfusion" target="_blank" rel="noopener">Instagram</a>, <a href="https://www.facebook.com/furnishfusion" target="_blank" rel="noopener">Facebook</a>, or chat on <a href="https://wa.me/919876543210" target="_blank" rel="noopener">WhatsApp</a>.</p>
+
+<h2>Response Time</h2>
+<p>We aim to respond to all inquiries within 24–48 hours on business days.</p>
+{% endblock %}

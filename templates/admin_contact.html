@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Details - FurnishFusion Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #C59D5F;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(197, 157, 95, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #C59D5F 0%, #B8860B 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(197, 157, 95, 0.4);
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #3c3;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .qr-section { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/admin/dashboard" class="nav-brand">🛋️ FurnishFusion Admin</a>
+            <div class="nav-links">
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/orders">Orders</a>
+                <a href="/admin/contact">Contact</a>
+                <a href="/products">View Site</a>
+                <a href="/admin/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'error' %}error-message{% else %}success-message{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Company Contact Details</h1>
+                <p>Manage company contact information visible to all users</p>
+            </div>
+
+            <form method="POST" action="/admin/contact">
+                <div class="form-group">
+                    <label for="company_name">Company Name *</label>
+                    <input type="text" id="company_name" name="company_name" 
+                           placeholder="Enter company name" 
+                           value="{{ contact_info.company_name if contact_info else '' }}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" 
+                               placeholder="contact@company.com" 
+                               value="{{ contact_info.email if contact_info else '' }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" 
+                               placeholder="+91 1234567890" 
+                               value="{{ contact_info.phone if contact_info else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Street Address *</label>
+                    <input type="text" id="address" name="address" 
+                           placeholder="Enter street address" 
+                           value="{{ contact_info.address if contact_info else '' }}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" 
+                               placeholder="Enter city" 
+                               value="{{ contact_info.city if contact_info else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" 
+                               placeholder="Enter state" 
+                               value="{{ contact_info.state if contact_info else '' }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="zip_code">Zip Code</label>
+                        <input type="text" id="zip_code" name="zip_code" 
+                               placeholder="Enter zip code" 
+                               value="{{ contact_info.zip_code if contact_info else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" 
+                               placeholder="Enter country" 
+                               value="{{ contact_info.country if contact_info else '' }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="website">Website URL</label>
+                    <input type="url" id="website" name="website" 
+                           placeholder="https://www.example.com" 
+                           value="{{ contact_info.website if contact_info else '' }}">
+                </div>
+
+                <button type="submit" class="btn-submit">Save Contact Details</button>
+            </form>
+        </div>
+
+        <div class="form-card" style="margin-top: 30px;">
+            <div class="form-header">
+                <h1>UPI QR Code</h1>
+                <p>Upload QR for users to pay 5% advance (shown at checkout when they choose UPI).</p>
+            </div>
+            <div class="qr-section" style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start;">
+                <div style="background:#f8f9fa; border:2px dashed #ddd; border-radius:12px; padding:16px; min-height:180px; display:flex; align-items:center; justify-content:center;">
+                    {% if upi_qr and upi_qr.image_url %}
+                        <img src="{{ upi_qr.image_url }}" alt="UPI QR" style="max-width:100%; max-height:160px; border-radius:8px;">
+                    {% else %}
+                        <span style="color:#999;">No QR</span>
+                    {% endif %}
+                </div>
+                <form method="POST" action="/admin/contact/qr" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Upload QR image</label>
+                        <input type="file" name="qr_file" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Or image URL</label>
+                        <input type="url" name="qr_image_url" placeholder="https://...">
+                    </div>
+                    <button type="submit" class="btn-submit">Save QR</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-card" style="margin-top: 30px;">
+            <div class="form-header">
+                <h1>Coupons</h1>
+                <p>Only <strong>active</strong> coupons give discounts. Users enter the code at checkout.</p>
+            </div>
+            <form method="POST" action="/admin/contact/coupon/add" class="form-inline" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                <input type="text" name="code" placeholder="Code (e.g. SAVE10)" required style="padding:10px; border:2px solid #e0e0e0; border-radius:8px; width:140px;">
+                <select name="discount_type" style="padding:10px; border:2px solid #e0e0e0; border-radius:8px;">
+                    <option value="percent">Percent %</option>
+                    <option value="fixed">Fixed ₹</option>
+                </select>
+                <input type="number" name="discount_value" placeholder="Value" step="0.01" min="0" required style="padding:10px; border:2px solid #e0e0e0; border-radius:8px; width:100px;">
+                <button type="submit" class="btn-submit" style="width:auto; margin-top:0;">Add</button>
+            </form>
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="border-bottom:2px solid #e0e0e0;">
+                        <th style="text-align:left; padding:10px;">Code</th>
+                        <th style="text-align:left; padding:10px;">Type</th>
+                        <th style="text-align:left; padding:10px;">Value</th>
+                        <th style="text-align:left; padding:10px;">Status</th>
+                        <th style="text-align:left; padding:10px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in coupons %}
+                    <tr style="border-bottom:1px solid #eee;">
+                        <td style="padding:10px; font-weight:600;">{{ c.code }}</td>
+                        <td style="padding:10px;">{{ c.discount_type }}</td>
+                        <td style="padding:10px;">{{ c.discount_value }}{% if c.discount_type == 'percent' %}%{% else %}₹{% endif %}</td>
+                        <td style="padding:10px;">
+                            <span style="padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600; {% if c.is_active %}background:#d4edda; color:#155724;{% else %}background:#f8d7da; color:#721c24;{% endif %}">
+                                {% if c.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </td>
+                        <td style="padding:10px;">
+                            <form method="POST" action="/admin/contact/coupon/{{ c.id }}/toggle" style="display:inline;">
+                                <button type="submit" style="padding:6px 12px; background:#17a2b8; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px;">Toggle</button>
+                            </form>
+                            <form method="POST" action="/admin/contact/coupon/{{ c.id }}/delete" style="display:inline;" onsubmit="return confirm('Delete this coupon?');">
+                                <button type="submit" style="padding:6px 12px; background:#dc3545; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" style="padding:20px; color:#666;">No coupons yet. Add one above.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
