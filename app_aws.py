@@ -31,7 +31,7 @@ orders_table = dynamodb.Table("FF_Orders")
 # -------------------------------------------------
 # SNS Topic ARN
 # -------------------------------------------------
-SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:203918855127:furnishfusion_topic"
+SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:466069313044:project_topic"
 
 # -------------------------------------------------
 # File Upload Configuration
@@ -260,3 +260,4 @@ def add_product():
 # =================================================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
+
